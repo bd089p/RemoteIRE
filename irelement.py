@@ -120,6 +120,7 @@ def create_remote_entiry():
           command = os.path.splitext(filename)[0]
           commands.append(command)
   
+      commands.sort()
       device_json = {
           'device': device,
           'commands': commands
