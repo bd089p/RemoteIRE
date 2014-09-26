@@ -4,7 +4,7 @@ IR remocon agent application.
 
 <div align="center"><img src="./images/overview.png" /></div>
 
-You need irMagician.
+ You need irMagician IR board to use RemoteIRE.
 
 <div align="center"><img src="./images/irMagicianRPi.png" /></div>
 
