@@ -4,6 +4,10 @@ IR remocon agent application.
 
 <div align="center"><img src="./images/overview.png" /></div>
 
+You need irMagician.
+
+<div align="center"><img src="./images/irMagicianRPi.png" /></div>
+
 ## Getting Started
 
 1. Install Python(>2.7) pyserial:
