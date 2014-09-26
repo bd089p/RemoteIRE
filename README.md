@@ -2,7 +2,7 @@
 
 IR remocon agent application.
 
-![ overview ](./images/overview.png "overview")↓
+<div align="center"><img src="./images/overview.png" /></div>
 
 ## Getting Started
 
