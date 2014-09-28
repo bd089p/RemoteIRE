@@ -15,7 +15,11 @@ IR remocon agent application.
         $ easy_install pip
         $ pip install pyserial
 
-2. Start agent:
+2. Start RemoteIRF:
+
+        $ python server.py
+
+3. Start agent:
 
         $ python irelement.py
 
@@ -32,9 +36,9 @@ IR remocon agent application.
           -d IRDEV, --device IRDEV    device file to send IR
 
 
-3. Using a browser, go to [Remote IR Frontend](https://github.com/netbuffalo/RemoteIRF) web UI (`http://localhost:8888/remocon/login`) and you'll see login page.
+4. Using a browser, go to [Remote IR Frontend](https://github.com/netbuffalo/RemoteIRF) web UI (`http://localhost:8888/remocon/login`) and you'll see login page.
 
-4. Follow the guidelines to use application.
+5. Follow the guidelines to use application.
 
     * [netbuffalo's blog](http://netbuffalo.doorblog.jp/archives/4873455.html)
     * [RemoteIRF](https://github.com/netbuffalo/RemoteIRF)
