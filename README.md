@@ -15,7 +15,7 @@ IR remocon agent application.
         $ easy_install pip
         $ pip install pyserial
 
-2. Start RemoteIRF:
+2. Start [RemoteIRF](https://github.com/netbuffalo/RemoteIRF):
 
         $ python server.py
 
