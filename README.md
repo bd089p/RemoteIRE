@@ -34,6 +34,7 @@ IR remocon agent application.
           -s SERVER, --server SERVER  WebAPI host
           -p PORT, --port PORT        WebAPI port
           -d IRDEV, --device IRDEV    device file to send IR
+          -t TEMP, --temperature TEMP temperature measurement and notification interval in sec
 
 
 4. Using a browser, go to [Remote IR Frontend](https://github.com/netbuffalo/RemoteIRF) web UI (`http://localhost:8888/remocon/login`) and you'll see login page.
