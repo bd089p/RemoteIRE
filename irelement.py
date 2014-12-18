@@ -11,6 +11,8 @@ import argparse
 import logging
 import logging.handlers
 
+import threading
+
 here = os.path.abspath(os.path.dirname(__file__))
 devices_dir =  here+"/devices"
 
@@ -21,6 +23,7 @@ parser = argparse.ArgumentParser(description='remote IR agent')
 parser.add_argument('-s', '--server', action="store", dest="server", help="WebAPI host", default="localhost")
 parser.add_argument('-p', '--port', action="store", dest="port", help="WebAPI port", default="8888")
 parser.add_argument('-d', '--device', action="store", dest="irdev", help="device file to send IR", default="/dev/ttyACM0")
+parser.add_argument('-t', '--temperature', action="store", dest="temp", help="temperature measurement and notification interval in sec", default=0)
 
 args = parser.parse_args()
 
@@ -84,6 +87,18 @@ def playIR(path):
 #  finally:
 
   return msg
+
+def measureTemperature():
+  ser = serial.Serial(args.irdev, 9600, timeout = 1)
+  ser.write("T\r\n")
+  time.sleep(1)
+  raw = ser.readline()
+  status = ser.readline().rstrip()
+  celsiusTemp = None
+  celsiusTemp = ((5.0 / 1024.0 * float(raw)) - 0.4) / 0.01953 
+  ser.close
+
+  return celsiusTemp
 
 def initialize_remote_entry():
   b = False
@@ -150,7 +165,46 @@ def create_remote_entiry():
 signal.signal(signal.SIGINT, handle_SIGINT)
 if not initialize_remote_entry(): sys.exit(1)
 if not create_remote_entiry(): sys.exit(1)
+#initialize_remote_entry()
+#create_remote_entiry()
 
+class TemperatureHandler(threading.Thread):
+
+  notification_url = 'http://'+args.server+':'+args.port+'/remocon/device/notify'
+
+  def __init__(self):
+    threading.Thread.__init__(self) 
+
+  def run(self):
+    # temperature loop
+    while 1:
+      try:
+        temperature = measureTemperature()
+        formatedTemperature = "{:4.1f}".format(temperature)
+        logger.info("current temperature: %s" % formatedTemperature)
+        logger.info("URL: %s" % self.notification_url)
+        req = urllib2.Request(self.notification_url)
+        req.add_header('Content-Type', 'application/json')
+        notify_json = {
+            'date': int(time.time()),
+            'type': 'temperature',
+            'value': formatedTemperature
+            }
+        res = urllib2.urlopen(req, json.dumps(notify_json))
+        if res.getcode() == http_status_ok:
+          logger.info("Success")
+        else:
+          logger.info("Failed")
+        res.close()
+      except Exception as e:
+        logger.error("Exception caught: %s" % str(e))
+
+      time.sleep(float(args.temp))
+
+if args.temp >= 60:
+  th = TemperatureHandler()
+  th.daemon = True
+  th.start()
 
 while 1:
   try:
@@ -198,6 +252,4 @@ while 1:
     create_remote_entiry()
 #  finally:
 #    response.close
-
-
 
