@@ -93,9 +93,11 @@ def measureTemperature():
   ser.write("T\r\n")
   time.sleep(1)
   raw = ser.readline()
+  if raw.rstrip() == "OK":
+    raw = ir_serial.readline()
   status = ser.readline().rstrip()
   celsiusTemp = None
-  celsiusTemp = ((5.0 / 1024.0 * float(raw)) - 0.4) / 0.01953 
+  celsiusTemp = ((5.0 / 1024.0 * float(raw)) - 0.4) / 0.01953 + 5
   ser.close
 
   return celsiusTemp
