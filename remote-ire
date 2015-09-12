@@ -1,0 +1,48 @@
+#!/bin/sh
+#init用スクリプト
+workdir=/home/pi/RemoteIRE
+ 
+start() {
+    cd $workdir
+    failcount=0
+# host <ホスト名>
+    while ! host salo
+    do
+        failcount=`expr $failcount + 1`
+        echo $failcount
+        if test $failcount -gt 60
+        then
+            break
+        fi
+        sleep 1
+    done
+#-t <温度の取得間隔（秒）> -s <ホスト名>
+    /usr/bin/python /home/pi/RemoteIRE/irelement.py -t 60 -s salo&
+    echo "Server started."
+}
+ 
+stop() {
+    pid=`ps -ef | grep '[p]ython /home/pi/RemoteIRE/irelement.py' | awk '{ print $2 }'`
+    echo $pid
+    kill $pid
+    sleep 2
+    echo "Server killed."
+}
+ 
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop   
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/remote-ire {start|stop|restart}"
+    exit 1
+esac
+exit 0
+
